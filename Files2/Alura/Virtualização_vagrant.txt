@@ -1,0 +1,39 @@
+Virtualização segue exatamente o conceito que conheço. Em uma maquina fisica, voce tem um sistema operacional, e por cima dele voce precisa instalar
+um hypervisor, que é o software ou camada que permite criar outras maquina virtuais. Existem alguns tipos de hypervisors, como o Virtualbox, Vmware, Hyper-V(microsoft). Após a instalação de um hypervisor, voce utiliza o Vagrant, que seria basicamente um prompt de linha de comando que se conecta ao hypervisor e permite que voce
+execute todos os comandos e ações para o processo de virtualização.
+Através de arquivos de configuração, voce cria as maquinas definindo ip, memoria, cpu, e até mesmo os softwares (desde que ja tenham sido baixados a imagem) que subirão
+com essa sua VM.
+Importante ressaltar que o vagrant para a instalação de software nao é muito flexivel nem sofisticado, nao sendo muito utilizado. Para instalação de softwares, depois que a VM subiu, usasse o Sensible ou Puppet(mais famoso para arquitetura complexas) que tem muito mais features do que o o Vagrant para a parte de instalação de software.
+É possível também baixar/criar imagens com o template do arquivo de configuração a ser criado, tornando o processo muito mais simples
+
+EImagem precise32 ja possui todas as configurações e parametriaões de memoria, cpu rede e etc...no comando abaixo do vagrant e para criar facilmente um VM com essa configuração
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "hashicorp/precise32"
+end
+
+
+Nessa aula começamos a criar a nossa primeira maquina virtual com Vagrant e Puppet.
+
+Sobre Vagrant aprendemos:
+
+Vagrant é uma ferramenta para construir e definir maquinas virtuais
+Vagrant usa VirtualBox por baixo dos panos (entre outro possíveis provedores)
+A configuração da(s) maquina(s) virtual(is) fica dentro do arquivo Vagrantfile
+No Vagrantfile definimos o box (imagem), IP entre outras configurações
+Para subir a VM usamos vagrant up, para parar vagrant halt
+Para ver o status usamos vagrant status
+Sobre Puppet aprendemos:
+
+Puppet e Ansible é uma ferramenta para provisionar a VM (instalar software/preparar a maquina)
+Para configurar os pacotes usamos comandos descritos no puppet ou ansible file (por exemplo web.pp)
+Os comandos deve ser aplicados através do puppet/ansible: sudo puppet/ansible apply /vagrant/manifests/web.pp
+Puppet nem sempre vem pre-instalado
+Existem comandos específicos como exec e package
+
+
+
+
+
+Notepad -> Vagrant
+Word -> Sensible 

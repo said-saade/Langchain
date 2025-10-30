@@ -1,0 +1,34 @@
+Após a maquina virtual ter sido criada através do Vagrant, usa-se o Ansible para orquestrar e criar os software que essa maquina virtual tera.
+Através de linha de comanto e arquivo de configuração, e possível realizar essa criação dos softwares. Com o Vagrant é possível criar o software tbm, mas muito mais limitado(sem muitas features), por isso usa-se o Sensible para a instalação de software
+
+Comparação para a parte de instalação de software
+Notepad -> Vagrant
+Word -> Sensible 
+
+
+$ ansible-playbook provising.yml -u vagrant -i hosts --private-key .vagrant/machines/wordpress/virtualbox/private_key
+
+Exemplo de arquivo de configuração chamado provising.yml para instalar um python
+
+---
+- hosts: all
+  tasks:
+    - name: 'Instala o PHP5'
+      apt:
+        name: php5
+        state: latest
+      become: yes
+	  
+
+	  
+** O nome desse arquivo também esta como puppet(Ansible_puppet) porque ambos os aplicativos tem o mesmo objetivo, automatizar instalaçao de aplicativos e pacotes
+após o deploy do servidor vmware. O Ansible é mais simples e dedicado para instalções menos complexas(projetos de menor porte), enquanto o puppet é mais "completo"
+
+Nessa aula começamos a criar a nossa primeira maquina virtual com Vagrant e Puppet.
+
+
+Puppet e Ansible é uma ferramenta para provisionar a VM (instalar software/preparar a maquina)
+Para configurar os pacotes usamos comandos descritos no puppet file (por exemplo web.pp)
+Os comandos deve ser aplicados através do puppet: sudo puppet apply /vagrant/manifests/web.pp
+
+Ansible e Pupper é identico ao dockercompose(dentro de um arquivo definimos tudo que sera instalado e carregado).

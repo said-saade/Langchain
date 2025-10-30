@@ -1,0 +1,111 @@
+**--VM
+Precisa instalar 1 SO por servidor. 1 maquina fisica, vira 6 maquinas virtuais com 6 SOs instalados. Os SOs podem ser diferentes,mas para cada maquina deve ser mantido esse ambiente, além do que temos 6 SOs consumindo recurso fisico(sobrecarga)
+
+**--Docker
+Voce so precisa de 1 unico SO instalado no servidor, assim, 3 ou 4 containers compartilha esse mesmo SO. Facilita a gestao do SO, assim como isola cada aplicação/deploy
+
+PaaS
+-- Plataforma como serviço. Voce envia sua aplicação, codigo fonte ou qualquer outra coisa nesse sentido, e a empresa se encarrega da parte de subir a aplicação(nao preciso cuida do servidor da aplicação, como, instalar banco, apache, weblogic, e etc). Azure, Google Cloud e AWS sao exemplos
+
+**-- Comandos Docker
+Segue também uma breve lista dos comandos utilizados:
+
+docker ps - exibe todos os containers em execução no momento.
+docker ps -a - exibe todos os containers, independentemente de estarem em execução ou não.
+docker run -it NOME_DA_IMAGEM - conecta o terminal que estamos utilizando com o do container.
+docker start ID_CONTAINER - inicia o container com id em questão.
+docker stop ID_CONTAINER - interrompe o container com id em questão.
+docker start -a -i ID_CONTAINER - inicia o container com id em questão e integra os terminais, além de permitir interação entre ambos.
+docker rm ID_CONTAINER - remove o container com id em questão.
+docker container prune - remove todos os containers que estão parados.
+docker rmi NOME_DA_IMAGEM - remove a imagem passada como parâmetro.
+docker run -d -P --name NOME dockersamples/static-site - ao executar, dá um nome ao container.
+docker run -d -p 12345:80 dockersamples/static-site - define uma porta específica para ser atribuída à porta 80 do container, neste caso 12345.
+docker run -d -P -e AUTHOR="Fulano" dockersamples/static-site - define uma variável de ambiente AUTHOR com o valor Fulano no container criado
+
+**-- Volume
+Se voce nao especifica um volume de forma explicita no docker, quando criarmos um container o output se perdera e nenhum arquivo sera gerado. É importante especificar
+um volume para poder salvar o resultado do seu processamento, ou codigo fonte e etc.
+
+docker run -it -v "C:\Users\Alura\Desktop:/var/www" ubuntu
+-> Sera criado um volume onde o resultado da saida default "/var/www" do docker cuspira a informação no diretorio C:\Users\Alura\Desktop
+
+docker run -it -v "C:\Users\Alura\Desktop:/var/www" ubuntu
+-> Sera criado um volume onde o resultado da saida default "/var/www" do docker cuspira a informação no diretorio C:\Users\Alura\Desktop
+
+**--Criando Imagens
+Quando criamos um container(docker), basicamente ele copia a estrutura de uma imagem ja existe. Essa imagem, seria uma imagem de uma tecnologia:
+	-- Imagem node
+	-- Imagem Ubuntu
+	-- Imagem MySql
+O objetivo de se criar imagens, é pode "sintetizar" todas as tecnolocias que voces precisa em uma unica imagem, e até subir o seu codigo fonte, e poder criar 1,2,3,4 ou mais containers a partir dessa imagem, onde seria o seu codigo fonte sendo executado.
+
+Exemplo do codigo(arquivo chamado Dockerfile):
+	FROM node:latest  -- Pegando a ultima versao da "tecnologia node"
+        MAINTAINER Said Saade -- Nome do criados
+        COPY . /var/www --Copiar os arquivos que estao no diretorio local(.) para o var/www(diretorio padrão do docker)
+        WORKDIR /var/www -- Variave de trabalhao
+        RUN npm install
+        ENTRYPOINT npm start
+        EXPOSE 3000
+
+Comando para criar a imagem: docker build -f Dockerfile -t Said/node 
+Comando para criar um container a partir da minha imagem: docker run -d -p 8080:3000 Said/node
+
+**--Lembrando também:
+
+as imagens são read-only sempre
+um container é uma instância de uma imagem
+para guardar as alterações a docker engine cria uma nova layer em cima da última layer da imagem
+Segue também uma breve lista dos comandos utilizados:
+
+docker build -f Dockerfile - cria uma imagem a partir de um Dockerfile.
+docker build -f CAMINHO_DOCKERFILE/Dockerfile -t NOME_USUARIO/NOME_IMAGEM - constrói e nomeia uma imagem não-oficial informando o caminho para o Dockerfile.
+docker login - inicia o processo de login no Docker Hub.
+docker push NOME_USUARIO/NOME_IMAGEM - envia a imagem criada para o Docker Hub.
+docker pull NOME_USUARIO/NOME_IMAGEM - baixa a imagem desejada do Docker Hub.
+
+**--Docker Compose
+Utilizado para orquestrar e subir multiplos containers. Quando vou subir 1 containes de banco, 1 de aplicação, 1 de  load balance, ao inves de fazer comando a comando, configuro no Docker Compose que ja e um arquivo que realizar essa configuração e orquestração(compose.yml)
+Voce sobe o docker compose que sera praticamente a criação de uma imagem e posteriormente um container com toda a sua aplicação
+
+
+
+
+
+
+
+
+
+
+
+
+1) Realizar o download da imagem do python
+	-- docker run python ou docker pull python
+
+2) configurar o arquivo dockerfile 
+    FROM python:latest
+	WORKDIR /home/migration
+	COPY . /home/migration
+	ENTRYPOINT ["python","main.py"]
+
+	salvar o nome como dockerfile
+
+3) copie todas as suas bibliotecas/libs para o diretorio /home/migration
+
+4) Crie a sua propria imagem dando o nome de conciliation
+	docker build -f dockerfile -t telefonica_prc .
+
+5) verifique se a sua imagem esta no ar
+	docker images | grep conciliation
+
+6) execute o container da sua imagem especificando o volume onde sera gerado o arquivo de input
+	nohup docker run -v "/home/migration/conciliacao_telefonica:/home/migration/conciliacao_telefonica" telefonica_prc & 
+	nohup docker run -v "/home/migration/api:/home/migration/api" telefonica_prc &
+	
+	repare que no diretorio /home/migration estara o output do seu arquivo
+
+Se executar com nohup: "nohup docker run -v "/home/migration:/home/migration" conciliation2 &", pode fechar o terminar e ser feliz
+Se quiser pode executar sem fechar o terminal e verificar o output sendo cuspido
+	docker run -v "/home/migration:/home/migration" -it conciliation
+

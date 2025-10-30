@@ -1,0 +1,21 @@
+#Iniciar o Jupiter com o Chrome - Prompt de comando do Anaconda
+jupyter notebook --browser=chrome
+----------------------------
+#Criar um ambiente especifico com versoes de modulos que voce precisa para o seu projeto. Caso queira a ultima versao, so colocar python pandas sem nenhum igual ou latest
+conda create --name alura_pandas python=2.7 pandas jupyter
+To activate this environment, use
+#
+#     $ conda activate alura_pandas
+#
+# To deactivate an active environment, use
+#
+#     $ conda deactivate
+
+Se voce voltar para a console do Anaconda e clicar em environment, voce vera o seu pacote criado
+------------------------------
+# Para remover o ambiente
+conda env remove -n alura_project
+
+## para adicionar um pacote a u ambiente ja existente
+conda install -n alura_pandas textblob
+conda remove -n alura_pandas textblob

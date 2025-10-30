@@ -1,0 +1,5 @@
+Chat Bot -> Definimos os caminhos e 100% regras no workflow.
+Agente IA -> Utiliza LLM a todo momento
+
+Poderiamos fazer 100% do chat bot em codigo, e caso alguma regra nao seja reconhecia poderia ser chamado o LLM. Um
+hibrido entre Chat Bot e Agent IA
