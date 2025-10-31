@@ -1,2 +1,0 @@
-•	Digital Commerce API: https://developer.salesforce.com/docs/industries/cme/references/std-dc-rest?meta=getOffersByCatalogCode
-•	Cart Based API: https://developer.salesforce.com/docs/industries/cme/references/cpq?meta=Summary

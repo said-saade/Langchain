@@ -1,6 +1,0 @@
-O Grafana é uma ferramenta de visualização de dashboards, assim como o Dynatrace. Ele é mais voltando para métricas de performance. O Grafana utiliza
-um banco de dados proprio, chamado Influx, para armazenamento dos dados que sao demonstrados a partir do dashboards. O Influx utilizada um modulo/agent chamado Telegraf, que funciona como um coletor das informações de cpu, memoria, rede e disco por exemplo, aplicação, banco de dados e etc
-
---> Grafana - Ferramenta de visualização
---> Influx  - Banco de dados que armazena os dados do Influx
---> Telegraf - Agent que coleta os dados dados de performance que serao armazenados no Influx e demonstrados pelo Grafana. O Telegraf pode coletar dados da cpu, memoria, rede, banco de dados, kafka(fila/queue), aplicações e etc. 
