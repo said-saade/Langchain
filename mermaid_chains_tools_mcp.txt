@@ -1,0 +1,78 @@
+
+%%{init: {'theme':'neutral'}}%%
+sequenceDiagram
+  autonumber
+  participant U as Usuário
+  participant UI as Interface
+  participant RA as RouterAgent
+  participant LLM as LLM
+  participant TA as TechSupportAgent
+  participant BA as BillingAgent
+  participant C_T as Chain: Diagnosticar4G
+  participant C_B as Chain: AnalisarFatura
+  participant MCP_N as MCP-Network
+  participant MCP_B as MCP-Billing
+  participant MCP_C as MCP-CRM
+  participant S_NET as Sistema: Rede
+  participant S_BILL as Sistema: Faturamento
+  participant S_CRM as Sistema: CRM
+
+  U->>UI: "4G lento e fatura alta"
+  UI->>RA: mensagem
+  RA->>LLM: classificar intenções
+  LLM-->>RA: suporte:0.6, fatura:0.4
+  RA->>TA: invocar suporte
+  RA->>BA: invocar billing
+
+  par Suporte
+    TA->>C_T: iniciar diagnóstico
+    C_T->>LLM: decidir passos
+    LLM-->>C_T: cobertura -> teste -> checklist
+    C_T->>MCP_N: check_coverage
+    MCP_N->>S_NET: consultar
+    S_NET-->>MCP_N: cobertura
+    C_T->>MCP_N: test_line
+    MCP_N->>S_NET: teste
+    S_NET-->>MCP_N: resultado
+    C_T->>LLM: enviar resultados
+    LLM-->>C_T: abrir_chamado?
+    alt abrir chamado
+      C_T->>MCP_N: abrir_chamado
+      MCP_N->>S_NET: criar ticket
+      S_NET-->>MCP_N: ticket_id
+      MCP_N-->>C_T: ticket_id
+    else checklist
+      C_T-->>TA: checklist/instruções
+    end
+    C_T-->>TA: resposta final
+    TA-->>RA: resumo técnico
+  and Billing
+    BA->>C_B: iniciar análise
+    C_B->>MCP_C: buscar cliente
+    MCP_C->>S_CRM: consulta
+    S_CRM-->>MCP_C: dados
+    MCP_C-->>C_B: dados cliente
+    C_B->>MCP_B: listar faturas
+    MCP_B->>S_BILL: consulta
+    S_BILL-->>MCP_B: lista
+    MCP_B-->>C_B: lista
+    C_B->>MCP_B: fatura detalhada
+    MCP_B->>S_BILL: detalhe
+    S_BILL-->>MCP_B: detalhe
+    MCP_B-->>C_B: fatura_detalhada
+    C_B->>LLM: analisar fatura
+    LLM-->>C_B: excesso franquia / sugestões
+    alt migração
+      C_B->>MCP_C: proposta
+      MCP_C->>S_CRM: gravar
+      S_CRM-->>MCP_C: ok
+      MCP_C-->>C_B: confirmação
+    else explicação
+      C_B-->>BA: explicar opções
+    end
+    C_B-->>BA: resposta final
+    BA-->>RA: resumo billing
+  end
+
+  RA->>UI: resposta consolidada
+  UI-->>U: diagnóstico + fatura + próximos passos
